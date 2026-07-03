@@ -8,6 +8,14 @@
   const qrContainer = document.getElementById("qr-code");
   const modalClose = document.getElementById("modal-close");
 
+  const pagination = document.getElementById("pagination");
+  const prevBtn = document.getElementById("prev-page");
+  const nextBtn = document.getElementById("next-page");
+  const pageInfo = document.getElementById("page-info");
+
+  const PAGE_SIZE = 24;
+  let currentPage = 1;
+
   let qrCodeInstance = null;
 
   function renderPhoto(photo) {
@@ -63,23 +71,49 @@
     if (e.key === "Escape") closePreview();
   });
 
-  async function loadGallery() {
+  async function loadGallery(page) {
+    grid.innerHTML = "";
+    emptyState.hidden = true;
+    pagination.hidden = true;
+
     try {
-      const response = await fetch("/api/gallery");
+      const response = await fetch(`/api/gallery?page=${page}&page_size=${PAGE_SIZE}`);
       if (!response.ok) throw new Error(`Request failed (${response.status})`);
       const data = await response.json();
 
-      if (!data.photos.length) {
+      currentPage = data.page;
+
+      if (!data.total) {
+        emptyState.textContent = "No golden tickets yet — step up and take the first one.";
         emptyState.hidden = false;
         return;
       }
 
       data.photos.forEach(renderPhoto);
+
+      if (data.total_pages > 1) {
+        pagination.hidden = false;
+        pageInfo.textContent = `Page ${data.page} of ${data.total_pages}`;
+        prevBtn.disabled = data.page <= 1;
+        nextBtn.disabled = data.page >= data.total_pages;
+      }
     } catch (err) {
-      emptyState.hidden = false;
       emptyState.textContent = "Couldn't load photos. Refresh to try again.";
+      emptyState.hidden = false;
     }
   }
 
-  loadGallery();
+  prevBtn.addEventListener("click", () => {
+    if (currentPage > 1) {
+      loadGallery(currentPage - 1);
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+  });
+
+  nextBtn.addEventListener("click", () => {
+    loadGallery(currentPage + 1);
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  });
+
+  loadGallery(1);
 })();
