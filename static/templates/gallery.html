@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Chocolate Factory Photo Booth — Golden Gallery</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600;700;800&family=Nunito:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap"
+    rel="stylesheet"
+  />
+  <link rel="stylesheet" href="/static/css/style.css" />
+</head>
+<body>
+  <nav class="topnav">
+    <span class="brand">🍫 Chocolate Factory Photo Booth</span>
+    <a href="/">Capture</a>
+    <a href="/gallery" class="active">Golden Gallery</a>
+  </nav>
+
+  <main class="gallery-page">
+    <h1 class="gallery-heading">The Golden Gallery</h1>
+    <p class="gallery-sub">Tap a photo to preview it and get a QR code for the full-resolution download.</p>
+
+    <div id="gallery-grid" class="gallery-grid"></div>
+    <p id="empty-state" class="empty-state" hidden>No golden tickets yet — step up and take the first one.</p>
+  </main>
+
+  <div id="preview-modal" class="modal">
+    <div class="modal-content">
+      <button id="modal-close" class="modal-close" aria-label="Close preview">&times;</button>
+      <img id="preview-image" alt="Selected photo preview" />
+      <div class="ticket-stub">
+        <p>Scan for your full-resolution photo</p>
+        <div id="qr-code"></div>
+      </div>
+    </div>
+  </div>
+
+  <script src="/static/js/qrcode.js"></script>
+  <script src="/static/js/gallery.js"></script>
+</body>
+</html>

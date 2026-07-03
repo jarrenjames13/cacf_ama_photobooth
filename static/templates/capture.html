@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Chocolate Factory Photo Booth — Capture</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600;700;800&family=Nunito:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap"
+    rel="stylesheet"
+  />
+  <link rel="stylesheet" href="/static/css/style.css" />
+</head>
+<body>
+  <nav class="topnav">
+    <span class="brand">🍫 Chocolate Factory Photo Booth</span>
+    <a href="/" class="active">Capture</a>
+    <a href="/gallery">Golden Gallery</a>
+  </nav>
+
+  <main class="capture-page">
+    <div class="hud-bar">
+      <span class="live-dot">LIVE</span>
+      <span id="hud-clock"></span>
+    </div>
+
+    <div class="viewfinder">
+      <video id="camera-feed" autoplay playsinline muted></video>
+      <img id="border-overlay" class="border-overlay" alt="" />
+      <div id="countdown" class="countdown" hidden></div>
+      <div id="flash" class="flash"></div>
+    </div>
+
+    <button id="shutter-btn" class="shutter" disabled aria-label="Take photo"></button>
+    <p id="status" class="status" role="status"></p>
+  </main>
+
+  <div id="result-modal" class="modal">
+    <div class="modal-content">
+      <button id="result-close" class="modal-close" aria-label="Close">&times;</button>
+      <img id="result-image" alt="Your photo" />
+      <div class="ticket-stub">
+        <p>Scan for your full-resolution photo</p>
+        <div id="result-qr"></div>
+        <div class="result-actions">
+          <button id="take-another-btn" class="btn-primary">Take Another Photo</button>
+          <a href="/gallery" class="btn-link">View Golden Gallery</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // small mono readout in the HUD, purely cosmetic
+    const clockEl = document.getElementById("hud-clock");
+    function tick() {
+      clockEl.textContent = new Date().toLocaleTimeString([], { hour12: false });
+    }
+    tick();
+    setInterval(tick, 1000);
+  </script>
+  <script src="/static/js/qrcode.js"></script>
+  <script src="/static/js/capture.js"></script>
+</body>
+</html>

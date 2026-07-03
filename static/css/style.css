@@ -1,0 +1,476 @@
+/* ==========================================================================
+   Design tokens
+   ========================================================================== */
+:root {
+  --bg: #23132f;
+  --surface: #341f42;
+  --surface-2: #402850;
+  --ink: #f8ecd4;
+  --muted: #c3a8d6;
+  --accent: #e8b23d; /* golden ticket foil */
+  --accent-ink: #2b1806;
+  --chocolate: #6b3a1f; /* chocolate factory brown */
+  --mint: #48c9b0; /* waterfall teal */
+  --candy: #ef5da8; /* candy swirl pink */
+  --danger: #ff6b4a;
+  --line: #4a3159;
+
+  --font-display: "Baloo 2", "Arial Rounded MT Bold", system-ui, sans-serif;
+  --font-body: "Nunito", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+
+  --radius: 18px;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--ink);
+  font-family: var(--font-body);
+  -webkit-font-smoothing: antialiased;
+}
+
+a {
+  color: inherit;
+}
+
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+}
+
+/* ==========================================================================
+   Top nav
+   ========================================================================== */
+.topnav {
+  display: flex;
+  align-items: center;
+  gap: 28px;
+  padding: 20px clamp(20px, 5vw, 48px);
+  border-bottom: 1px solid var(--line);
+}
+
+.topnav .brand {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 1.05rem;
+  letter-spacing: 0.02em;
+  margin-right: auto;
+}
+
+.topnav a {
+  text-decoration: none;
+  color: var(--muted);
+  font-size: 0.92rem;
+  font-weight: 500;
+  padding: 6px 2px;
+  border-bottom: 2px solid transparent;
+  transition: color 0.15s ease, border-color 0.15s ease;
+}
+
+.topnav a:hover {
+  color: var(--ink);
+}
+
+.topnav a.active {
+  color: var(--ink);
+  border-bottom-color: var(--accent);
+}
+
+/* ==========================================================================
+   Capture page — the "viewfinder"
+   ========================================================================== */
+.capture-page {
+  min-height: calc(100vh - 73px);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+  padding: 24px 20px 40px;
+}
+
+.viewfinder {
+  position: relative;
+  width: min(92vw, 480px);
+  min-height: 320px;
+  background: #000;
+  border-radius: var(--radius);
+  overflow: hidden;
+  box-shadow: 0 30px 60px -20px rgba(0, 0, 0, 0.6);
+  transition: width 0.15s ease, height 0.15s ease;
+}
+
+.viewfinder video {
+  position: absolute;
+  object-fit: cover;
+  background: #000;
+  transform: scaleX(-1); /* mirror, feels natural to look at */
+  display: block;
+}
+
+.hud-bar {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  color: var(--muted);
+  letter-spacing: 0.04em;
+}
+
+.hud-bar .live-dot {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--ink);
+}
+
+.hud-bar .live-dot::before {
+  content: "";
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--mint);
+  box-shadow: 0 0 0 0 rgba(111, 207, 151, 0.6);
+  animation: pulse 1.8s ease-out infinite;
+}
+
+@keyframes pulse {
+  0% { box-shadow: 0 0 0 0 rgba(111, 207, 151, 0.55); }
+  70% { box-shadow: 0 0 0 8px rgba(111, 207, 151, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(111, 207, 151, 0); }
+}
+
+/* the actual border image, shown live at the same size/position it will
+   be composited at — this is what keeps the subject inside the
+   transparent window: you can see the real cutout while framing */
+.border-overlay {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: fill; /* container aspect ratio is set to match the border's own, so no distortion */
+  pointer-events: none;
+  z-index: 2;
+}
+
+.viewfinder .flash {
+  position: absolute;
+  inset: 0;
+  background: #fff;
+  opacity: 0;
+  pointer-events: none;
+  z-index: 3;
+}
+
+.viewfinder .flash.fire {
+  animation: flash-fire 380ms ease-out;
+}
+
+@keyframes flash-fire {
+  0% { opacity: 0.95; }
+  100% { opacity: 0; }
+}
+
+/* shutter button */
+.shutter {
+  width: 76px;
+  height: 76px;
+  border-radius: 50%;
+  border: 3px solid var(--accent);
+  background: transparent;
+  padding: 6px;
+  cursor: pointer;
+  transition: transform 0.1s ease, opacity 0.2s ease;
+}
+
+.shutter::after {
+  content: "";
+  display: block;
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  background: var(--accent);
+}
+
+.shutter:active:not(:disabled) {
+  transform: scale(0.92);
+}
+
+.shutter:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+}
+
+.shutter:disabled::after {
+  background: var(--muted);
+}
+
+.status {
+  min-height: 1.3em;
+  font-size: 0.92rem;
+  color: var(--muted);
+  text-align: center;
+  max-width: 420px;
+}
+
+.status.error {
+  color: var(--danger);
+}
+
+.status.success {
+  color: var(--mint);
+}
+
+/* ==========================================================================
+   Gallery page
+   ========================================================================== */
+.gallery-page {
+  max-width: 1080px;
+  margin: 0 auto;
+  padding: 40px clamp(20px, 5vw, 48px) 64px;
+}
+
+.gallery-heading {
+  font-family: var(--font-display);
+  font-size: clamp(1.5rem, 3vw, 2rem);
+  margin: 0 0 6px;
+}
+
+.gallery-sub {
+  color: var(--muted);
+  font-size: 0.92rem;
+  margin: 0 0 32px;
+}
+
+.gallery-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+  gap: 18px;
+}
+
+.gallery-item {
+  border: none;
+  padding: 0;
+  background: var(--surface);
+  border-radius: 10px;
+  overflow: hidden;
+  cursor: pointer;
+  aspect-ratio: 3 / 4;
+  box-shadow: 0 1px 0 var(--line);
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.gallery-item:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 14px 28px -14px rgba(0, 0, 0, 0.55);
+}
+
+.gallery-item img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.empty-state {
+  color: var(--muted);
+  font-size: 0.95rem;
+  padding: 40px 0;
+}
+
+/* ==========================================================================
+   Preview modal — "ticket stub" for the QR handoff
+   ========================================================================== */
+.modal {
+  position: fixed;
+  inset: 0;
+  background: rgba(10, 9, 16, 0.72);
+  backdrop-filter: blur(3px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.18s ease;
+  z-index: 10;
+}
+
+.modal.open {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.modal-content {
+  background: var(--surface);
+  border-radius: var(--radius);
+  width: min(92vw, 380px);
+  max-height: 88vh;
+  overflow-y: auto;
+  position: relative;
+  box-shadow: 0 40px 80px -20px rgba(0, 0, 0, 0.7);
+}
+
+.modal-close {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  border: none;
+  background: rgba(0, 0, 0, 0.45);
+  color: var(--ink);
+  font-size: 1.1rem;
+  line-height: 1;
+  cursor: pointer;
+  z-index: 1;
+}
+
+.modal-content img {
+  width: 100%;
+  display: block;
+  border-radius: var(--radius) var(--radius) 0 0;
+}
+
+.ticket-stub {
+  padding: 22px 24px 26px;
+  text-align: center;
+  border-top: 2px dashed var(--line);
+  position: relative;
+}
+
+/* notches to sell the "ticket" cut, matching the page background */
+.ticket-stub::before,
+.ticket-stub::after {
+  content: "";
+  position: absolute;
+  top: -10px;
+  width: 20px;
+  height: 20px;
+  background: var(--bg);
+  border-radius: 50%;
+}
+
+.ticket-stub::before { left: -10px; }
+.ticket-stub::after { right: -10px; }
+
+.ticket-stub p {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin: 0 0 14px;
+}
+
+#qr-code,
+#result-qr {
+  display: inline-flex;
+  padding: 12px;
+  background: var(--ink);
+  border-radius: 8px;
+}
+
+/* countdown overlay on the viewfinder */
+.countdown {
+  position: absolute;
+  inset: 0;
+  z-index: 4;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(20, 12, 30, 0.35);
+  pointer-events: none;
+}
+
+.countdown[hidden] {
+  display: none;
+}
+
+.countdown::after {
+  content: attr(data-count);
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: clamp(4rem, 18vw, 9rem);
+  color: var(--ink);
+  text-shadow: 0 6px 24px rgba(0, 0, 0, 0.55);
+}
+
+.countdown.tick::after {
+  animation: countdown-pulse 1s ease-out;
+}
+
+@keyframes countdown-pulse {
+  0% { transform: scale(1.5); opacity: 0; }
+  25% { transform: scale(1); opacity: 1; }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+/* result modal action buttons */
+.result-actions {
+  margin-top: 18px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+}
+
+.btn-primary {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 0.95rem;
+  color: var(--accent-ink);
+  background: var(--accent);
+  border: none;
+  border-radius: 999px;
+  padding: 12px 28px;
+  cursor: pointer;
+  transition: transform 0.12s ease, box-shadow 0.12s ease;
+}
+
+.btn-primary:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 10px 20px -8px rgba(232, 178, 61, 0.55);
+}
+
+.btn-primary:active {
+  transform: translateY(0);
+}
+
+.btn-link {
+  font-size: 0.85rem;
+  color: var(--muted);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.btn-link:hover {
+  color: var(--ink);
+}
+
+/* ==========================================================================
+   Reduced motion
+   ========================================================================== */
+@media (prefers-reduced-motion: reduce) {
+  .hud-bar .live-dot::before,
+  .viewfinder .flash.fire,
+  .gallery-item,
+  .shutter,
+  .modal,
+  .countdown.tick::after {
+    animation: none !important;
+    transition: none !important;
+  }
+}
