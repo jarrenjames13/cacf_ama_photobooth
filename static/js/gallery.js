@@ -91,11 +91,14 @@
 
       data.photos.forEach(renderPhoto);
 
+      // Always update button states first
+      prevBtn.disabled = data.page <= 1;
+      nextBtn.disabled = data.page >= data.total_pages;
+      
+      // Only show pagination if there's more than one page
       if (data.total_pages > 1) {
         pagination.hidden = false;
         pageInfo.textContent = `Page ${data.page} of ${data.total_pages}`;
-        prevBtn.disabled = data.page <= 1;
-        nextBtn.disabled = data.page >= data.total_pages;
       }
     } catch (err) {
       emptyState.textContent = "Couldn't load photos. Refresh to try again.";
@@ -104,13 +107,13 @@
   }
 
   prevBtn.addEventListener("click", () => {
-    if (currentPage > 1) {
-      loadGallery(currentPage - 1);
-      window.scrollTo({ top: 0, behavior: "smooth" });
-    }
+    if (prevBtn.disabled || currentPage <= 1) return;
+    loadGallery(currentPage - 1);
+    window.scrollTo({ top: 0, behavior: "smooth" });
   });
 
   nextBtn.addEventListener("click", () => {
+    if (nextBtn.disabled) return;
     loadGallery(currentPage + 1);
     window.scrollTo({ top: 0, behavior: "smooth" });
   });
