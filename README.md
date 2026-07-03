@@ -5,21 +5,25 @@ A web-based photobooth application that captures photos with decorative borders,
 ## Screenshots
 
 ### Capture Page
+
 The main capture interface with live camera feed and border overlay.
 
 ![Capture Page](static/assets/capture_page.png)
 
 ### Countdown Timer
+
 Countdown timer displayed when taking a photo, giving users time to pose.
 
 ![Timer](static/assets/timer.png)
 
 ### Successful Capture
+
 Confirmation shown after successfully capturing and uploading a photo.
 
 ![Successful Capture](static/assets/successful_capture.png)
 
 ### Gallery Page
+
 Browse all captured photos with QR code generation for easy mobile sharing.
 
 ![Gallery Page](static/assets/gallery_page.png)
@@ -40,6 +44,7 @@ Browse all captured photos with QR code generation for easy mobile sharing.
 ## Tech Stack
 
 **Backend:**
+
 - FastAPI - Modern Python web framework
 - Uvicorn - ASGI server
 - SQLite - Embedded database
@@ -47,12 +52,14 @@ Browse all captured photos with QR code generation for easy mobile sharing.
 - Python-dotenv - Environment variable management
 
 **Frontend:**
+
 - Vanilla JavaScript
 - HTML5 Canvas for image compositing
 - QR Code generation library
 - Responsive CSS
 
 **Storage:**
+
 - AWS S3 - Cloud object storage
 
 ## Project Structure
@@ -162,6 +169,7 @@ uvicorn main:app --host 0.0.0.0 --port 8000 --reload
 ```
 
 The application will be available at:
+
 - Main capture page: http://localhost:8000
 - Gallery page: http://localhost:8000/gallery
 - API documentation: http://localhost:8000/docs
@@ -174,7 +182,7 @@ The application will be available at:
 2. Allow camera permissions when prompted
 3. Position yourself in the camera frame
 4. Click the capture button
-5. A countdown timer will appear (3-2-1)
+5. A countdown timer will appear (5-4-3-2-1)
 6. The photo will be captured and automatically uploaded to S3 with the border overlay applied
 7. A success notification will confirm the upload
 
@@ -190,6 +198,7 @@ The application will be available at:
 ### Camera Capture
 
 **POST** `/api/photos`
+
 - Upload captured photos (both low-res and high-res)
 - **Request:** Multipart form data with two image files
   - `low_res`: Low resolution JPEG
@@ -208,6 +217,7 @@ The application will be available at:
 ### Gallery
 
 **GET** `/api/gallery`
+
 - Retrieve all photos
 - **Response:** List of photos with low-res and high-res URLs
 
@@ -246,16 +256,16 @@ To allow public read access to your photos:
 
 ```json
 {
-    "Version": "2012-10-17",
-    "Statement": [
-        {
-            "Sid": "PublicReadGetObject",
-            "Effect": "Allow",
-            "Principal": "*",
-            "Action": "s3:GetObject",
-            "Resource": "arn:aws:s3:::your-bucket-name/*"
-        }
-    ]
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Sid": "PublicReadGetObject",
+      "Effect": "Allow",
+      "Principal": "*",
+      "Action": "s3:GetObject",
+      "Resource": "arn:aws:s3:::your-bucket-name/*"
+    }
+  ]
 }
 ```
 
@@ -265,17 +275,14 @@ Your IAM user needs at least these permissions:
 
 ```json
 {
-    "Version": "2012-10-17",
-    "Statement": [
-        {
-            "Effect": "Allow",
-            "Action": [
-                "s3:PutObject",
-                "s3:GetObject"
-            ],
-            "Resource": "arn:aws:s3:::your-bucket-name/*"
-        }
-    ]
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Effect": "Allow",
+      "Action": ["s3:PutObject", "s3:GetObject"],
+      "Resource": "arn:aws:s3:::your-bucket-name/*"
+    }
+  ]
 }
 ```
 
@@ -337,6 +344,7 @@ app.include_router(your_module_router)
 ### Import Errors
 
 If you see import errors like `cannot import name 'build_key'`, ensure:
+
 - All dependencies are installed: `pip install -r requirements.txt`
 - You're using the correct Python version (3.10+)
 - The virtual environment is activated
