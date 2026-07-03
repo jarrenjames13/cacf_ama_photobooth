@@ -102,7 +102,7 @@ a {
 .viewfinder {
   position: relative;
   width: min(92vw, 480px);
-  min-height: 320px;
+  aspect-ratio: 16 / 9; /* fallback only, replaced by explicit px sizing once JS/border loads */
   background: #000;
   border-radius: var(--radius);
   overflow: hidden;

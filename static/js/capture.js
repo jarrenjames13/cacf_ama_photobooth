@@ -11,7 +11,7 @@
   // The transparent "window" inside the border, as fractions of the full
   // border image. Regenerate with `python tools/detect_window.py <path>`
   // any time the border image changes.
-  const WINDOW_RECT = { left: 0.2812, top: 0.1901, right: 0.7238, bottom: 0.7669 };
+  const WINDOW_RECT = { left: 0.281, top: 0.1903, right: 0.722, bottom: 0.7641 };
 
   // ---- Elements -------------------------------------------------------------
   const video = document.getElementById("camera-feed");
