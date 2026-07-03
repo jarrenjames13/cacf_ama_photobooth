@@ -1,0 +1,8 @@
+venv/
+venv_test/
+__pycache__/
+*.pyc
+.env
+*.db
+.DS_Store
+/delete_scripts
