@@ -1,4 +1,4 @@
-from modules.database import get_connection
+from database import get_connection
 
 
 def get_photos_page(offset: int, limit: int) -> list[dict]:
