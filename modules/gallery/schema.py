@@ -11,3 +11,7 @@ class PhotoItem(BaseModel):
 
 class PhotoListResponse(BaseModel):
     photos: list[PhotoItem]
+    page: int
+    page_size: int
+    total: int
+    total_pages: int
